@@ -13,7 +13,7 @@ def _argparse():
     arg_parse = ArgumentParser(description="Crawl last.fm for finnish users, given a seed person or a reference to a "
                                            "file containing one seed name per line. Either a seed name or a seed file "
                                            "is required")
-    arg_parse.add_argument("api-key", type=str,
+    arg_parse.add_argument("api_key", type=str,
                            help="last.fm api key to use for crawling.")
     arg_parse.add_argument("-n", "--name", type=str, default=None,
                            help="Seed name for crawling names")
@@ -110,6 +110,6 @@ if __name__ == "__main__":
     seed = [args.name]
     if args.input and isfile(args.input):
         seed = read_names(args.input)
-    main(Connection(User(sys.argv[1]), "http://ws.audioscrobbler.com/2.0/"), seed)
+    main(Connection(User(args.api_key), "http://ws.audioscrobbler.com/2.0/"), seed)
 
 
