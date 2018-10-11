@@ -21,6 +21,8 @@ def _argparse():
                            help="Seed file for crawling. One name per line.")
     arg_parse.add_argument("-o", "--output", type=str, default="fi_names.txt",
                            help="Output file for the names. One name per line.")
+    arg_parse.add_argument("-d", "--debug", action="store_true",
+                           help="Print debug output to stderr")
     return arg_parse
 
 
@@ -32,8 +34,9 @@ class User:
 
 
 class Connection:
-    def __init__(self, user, base_url):
+    def __init__(self, user, base_url, debug=False):
         self.user = user
+        self.debug = debug
         self.base_url = base_url
         self.base_time = time.time()
 
@@ -44,8 +47,9 @@ class Connection:
             time.sleep(1)
         self.base_time = time.time()
         r = requests.get(self.base_url, params=payload)
-        sys.stderr.write("{}: Retrieved {}\n".format(r.status_code, r.url))
-        sys.stderr.flush()
+        if self.debug:
+            sys.stderr.write("{}: Retrieved {}\n".format(r.status_code, r.url))
+            sys.stderr.flush()
         if r.status_code == 200:
             return json.loads(r.text)
         return None
@@ -88,6 +92,7 @@ def main(conn, entry_points):
             for fr in fl:
                 if "country" in fr and fr["country"] == "Finland" and "name" in fr and fr["name"] not in found:
                     out_file.write("{}\n".format(fr["name"]))
+                    out_file.flush()
                     fil += 1
                     uq.append(fr["name"])
                     found.add(fr["name"])
@@ -110,6 +115,6 @@ if __name__ == "__main__":
     seed = [args.name]
     if args.input and isfile(args.input):
         seed = read_names(args.input)
-    main(Connection(User(args.api_key), "http://ws.audioscrobbler.com/2.0/"), seed)
+    main(Connection(User(args.api_key), "http://ws.audioscrobbler.com/2.0/", debug=args.debug), seed)
 
 

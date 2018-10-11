@@ -16,6 +16,8 @@ def _argparse():
     arg_parse.add_argument("-c", "--cache", type=str, default="done_names.txt",
                            help="Path to file containing names of usernames already scraped. If file does not "
                                 "exist it will be created.")
+    arg_parse.add_argument("-d", "--debug", action="store_true",
+                           help="Print debug output to stderr")
     return arg_parse
 
 
@@ -98,4 +100,5 @@ if __name__ == "__main__":
     if isfile(args.cache):
         done_names = read_names(args.cache)
     names = read_names(args.input, done_names)
-    main(Connection(User(args.api_key), "http://ws.audioscrobbler.com/2.0/"), names, args.cache, args.output)
+    main(Connection(User(args.api_key), "http://ws.audioscrobbler.com/2.0/", debug=args.debug),
+         names, args.cache, args.output)
