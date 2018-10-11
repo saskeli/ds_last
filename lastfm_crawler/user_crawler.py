@@ -92,13 +92,13 @@ def main(conn, entry_points):
             for fr in fl:
                 if "country" in fr and fr["country"] == "Finland" and "name" in fr and fr["name"] not in found:
                     out_file.write("{}\n".format(fr["name"]))
-                    out_file.flush()
                     fil += 1
                     uq.append(fr["name"])
                     found.add(fr["name"])
                 elif "name" in fr and fr["name"] not in found:
                     found.add(fr["name"])
                     nfil += 1
+                out_file.flush()
             tabb(people, fil, nfil)
     print("Found {} people with country == Finland".format(fil))
     print("Found {} people where not country == Finland".format(nfil))

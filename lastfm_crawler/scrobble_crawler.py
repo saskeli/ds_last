@@ -75,7 +75,7 @@ def main(conn, name_list, cache_path, out_path):
         with open(out_path, 'w', newline="") as out_file:
             csv_out = writer(out_file)
             csv_out.writerow(["username", "url", "artist name", "artist id", "uts time", "track id"])
-    with Tabber("Users", "Songs", "To go") as tabb, open(cache_path, 'a') as cache_path, \
+    with Tabber("Users", "Songs", "To go") as tabb, open(cache_path, 'a') as cache_file, \
             open(out_path, 'a', newline="") as out_file:
         csv_out = writer(out_file)
         song_count = 0
@@ -90,7 +90,9 @@ def main(conn, name_list, cache_path, out_path):
             song_count += len(scrobbles)
             for scrobble in scrobbles:
                 csv_out.writerow(scrobble)
-            cache_path.write("{}\n".format(name))
+                out_file.flush()
+            cache_file.write("{}\n".format(name))
+            cache_file.flush()
         tabb(len(name_list), song_count, 0)
 
 
