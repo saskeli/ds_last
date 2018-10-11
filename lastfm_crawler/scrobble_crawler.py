@@ -1,5 +1,3 @@
-import json
-
 from argparse import ArgumentParser
 from csv import writer
 from os.path import isfile
